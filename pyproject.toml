@@ -1,0 +1,22 @@
+[project]
+name = 'demo-gpt-j-6B-tensorrt-int8'
+version = '0.0.1'
+
+[tool.black]
+line-length = 120
+target-version = ['py38', 'py39']
+include = '\.pyi?$|\.ipynbi?$'
+skip-string-normalization = 1
+extend-exclude = '3rd_party/'
+
+[tool.isort]
+profile = 'black'
+line_length = 120
+ensure_newline_before_comments = true
+force_single_line = true
+
+[tool.nbqa.mutate]
+pyupgrade = 1
+
+[tool.nbqa.addopts]
+pyupgrade = ["--py38-plus"]
