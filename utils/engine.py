@@ -10,6 +10,8 @@ _GPU_NAME = None
 
 
 def get_gpu_name() -> str:
+    """Returns name of the current GPU."""
+
     global _GPU_NAME
 
     if _GPU_NAME is None:
@@ -21,6 +23,8 @@ def get_gpu_name() -> str:
 
 
 def get_prebuild_engine_filename(fp16: bool = False) -> str:
+    """Returns file name of the prebuilded engine for the current GPU and the currnt tensorrt version."""
+
     filename = get_gpu_name().replace(' ', '_')
     filename += '-'
     filename += trt.__version__.replace('.', '_')
@@ -31,6 +35,8 @@ def get_prebuild_engine_filename(fp16: bool = False) -> str:
 
 
 def get_engine() -> Path:
+    """Returns path to the tensorrt engine for the current GPU and the current tensorrt version."""
+
     try:
         path_to_engine = hf_hub_download(
             repo_id='ENOT-AutoDL/gpt-j-6B-tensorrt-int8',
