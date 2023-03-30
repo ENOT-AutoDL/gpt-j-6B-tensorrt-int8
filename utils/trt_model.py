@@ -22,7 +22,7 @@ class TrtModel:
         Parameters
         ----------
         path_to_engine : str
-            Path to tensorrt engine file.
+            Path to TensorRT engine file.
 
         """
         runtime = trt.Runtime(TRT_LOGGER)
