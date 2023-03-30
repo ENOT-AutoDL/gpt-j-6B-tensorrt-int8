@@ -16,7 +16,7 @@ def test_acc(predict_next_id_function: Callable[[torch.Tensor], torch.Tensor], v
     predict_next_id_function : Callable[[torch.Tensor], torch.Tensor]
         Callable object, which returns next token id predicted by the model.
     verbose : bool
-        Shows the progress of calculations, if the parameter is True.
+        Shows the progress of calculations.
 
     Returns
     -------
