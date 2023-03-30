@@ -16,5 +16,5 @@ Our example notebook automatically downloads the appropriate engine.
 
 |   |INT8|FP32|
 |---|:---:|:---:|
-| **Lambada Acc** |78.50%|79.54%|
+| **Lambada Acc** |78.50%|79.17%|
 | **Model size (GB)**  |8.5|24.2|
