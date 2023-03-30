@@ -9,9 +9,7 @@ from huggingface_hub.utils import EntryNotFoundError
 _GPU_NAME = None
 
 
-def get_gpu_name() -> str:
-    """Returns name of the current GPU."""
-
+def _gpu_name() -> str:
     global _GPU_NAME
 
     if _GPU_NAME is None:
@@ -22,10 +20,8 @@ def get_gpu_name() -> str:
     return _GPU_NAME
 
 
-def get_prebuild_engine_filename(fp16: bool = False) -> str:
-    """Returns file name of the prebuilded engine for the current GPU and the currnt tensorrt version."""
-
-    filename = get_gpu_name().replace(' ', '_')
+def _prebuilt_engine_filename(fp16: bool = False) -> str:
+    filename = _gpu_name().replace(' ', '_')
     filename += '-'
     filename += trt.__version__.replace('.', '_')
     filename += '-'
@@ -35,14 +31,14 @@ def get_prebuild_engine_filename(fp16: bool = False) -> str:
 
 
 def get_engine() -> Path:
-    """Returns path to the tensorrt engine for the current GPU and the current tensorrt version."""
+    """Returns path to the TensorRT engine for the current GPU and the current TensorRT version."""
 
     try:
         path_to_engine = hf_hub_download(
             repo_id='ENOT-AutoDL/gpt-j-6B-tensorrt-int8',
-            filename=get_prebuild_engine_filename(),
+            filename=_prebuilt_engine_filename(),
         )
     except EntryNotFoundError as exc:
-        raise RuntimeError('Prebuilded engine for your GPU is not found.') from exc
+        raise RuntimeError('Prebuilt engine for your GPU not found') from exc
 
     return Path(path_to_engine)

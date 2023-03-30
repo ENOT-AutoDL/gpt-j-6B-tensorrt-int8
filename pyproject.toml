@@ -7,7 +7,6 @@ line-length = 120
 target-version = ['py38', 'py39']
 include = '\.pyi?$|\.ipynbi?$'
 skip-string-normalization = 1
-extend-exclude = '3rd_party/'
 
 [tool.isort]
 profile = 'black'

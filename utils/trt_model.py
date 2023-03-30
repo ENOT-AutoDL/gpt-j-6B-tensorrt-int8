@@ -13,8 +13,8 @@ TRT_LOGGER = trt.Logger(trt.Logger.VERBOSE)
 
 class TrtModel:
     """
-    Wrapper class, which initializes tensorrt engine and takes care about
-    processing dynamic shapes.
+    Wrapper class that initializes TensorRT engine and takes care of
+    dynamic shapes processing.
     """
 
     def __init__(self, path_to_engine: str):
@@ -53,7 +53,7 @@ class TrtModel:
         Returns
         -------
         Tuple[int, ...]
-            Shape of the bindig.
+            Shape of the binding.
 
         """
         index = self.engine.get_binding_index(name)
@@ -101,7 +101,7 @@ class TrtModel:
                 trt.bool: torch.bool,
             }[trt_dtype]
         except KeyError as exc:
-            raise RuntimeError(f'Got unknown trt dtype ({trt_dtype})') from exc
+            raise ValueError(f'Got unknown TensorRT dtype ({trt_dtype})') from exc
 
     def _prepare_output_tensor(self, name: str, output_tensor: Optional[torch.Tensor]) -> torch.Tensor:
         if output_tensor is None:
@@ -134,8 +134,8 @@ class TrtModel:
         bindings: List = [None] * self.engine.num_bindings
         for name, data in {**input_tensors, **output_tensors}.items():
             if self.binding_dtype(name) != data.dtype:
-                raise RuntimeError(
-                    f'binding ("{name}") dtype ({self.binding_dtype(name)}) and '
+                raise TypeError(
+                    f'Binding ("{name}") dtype ({self.binding_dtype(name)}) and '
                     f'binding tensor dtype ({data.dtype}) must be the same'
                 )
 
@@ -151,13 +151,13 @@ class TrtModel:
     ) -> Dict[str, torch.Tensor]:
         """
         Runs model and returns result as dictionary, where keys are names of outputs
-        and values are corresponding output data as `torch.Tensors`.
+        and values are corresponding output data as `torch.Tensor`s.
 
         Parameters
         ----------
         input_tensors : Dict[str, torch.Tensor]
             Dictionary of inputs, where keys are names of inputs and values are
-            corresponding input data as `torch.Tensors`.
+            corresponding input data as `torch.Tensor`s.
 
         output_tensors_cache : Optional[Dict[str, torch.Tensor]]
             Dictionary of preallocated tensors for model output. Model checks every
@@ -168,7 +168,7 @@ class TrtModel:
         -------
         Dict[str, torch.Tensor]
             Model output as dictionary, where keys are names of outputs and values are
-            corresponding output data as `torch.Tensors`.
+            corresponding output data as `torch.Tensor`s.
 
         """
         bindings, output_tensors = self._create_bindings(
