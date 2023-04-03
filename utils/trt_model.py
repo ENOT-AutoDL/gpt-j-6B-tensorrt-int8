@@ -30,16 +30,29 @@ class TrtModel:
             self.engine = runtime.deserialize_cuda_engine(engine_file.read())
 
         self.context = self.engine.create_execution_context()
+        self.context.active_optimization_profile = 0
 
     @property
     def inputs(self) -> List[str]:
         """List of inputs names."""
-        return [self.engine[i] for i in range(len(self.engine)) if self.engine.binding_is_input(i)]
+        inputs = [self.engine[i] for i in range(len(self.engine)) if self.engine.binding_is_input(i)]
+
+        if self.context.active_optimization_profile:
+            profile = f'[profile {self.context.active_optimization_profile}]'
+            return [i for i in inputs if profile in i]
+
+        return [i for i in inputs if 'profile' not in i]
 
     @property
     def outputs(self) -> List[str]:
         """List of outputs names."""
-        return [self.engine[i] for i in range(len(self.engine)) if not self.engine.binding_is_input(i)]
+        outputs = [self.engine[i] for i in range(len(self.engine)) if not self.engine.binding_is_input(i)]
+
+        if self.context.active_optimization_profile:
+            profile = f'[profile {self.context.active_optimization_profile}]'
+            return [i for i in outputs if profile in i]
+
+        return [i for i in outputs if 'profile' not in i]
 
     def binding_shape(self, name: str) -> Tuple[int, ...]:
         """
@@ -131,7 +144,7 @@ class TrtModel:
         for name, data in output_tensors.items():
             output_tensors[name] = self._prepare_output_tensor(name, data)
 
-        bindings: List = [None] * self.engine.num_bindings
+        bindings: List = [0] * self.engine.num_bindings
         for name, data in {**input_tensors, **output_tensors}.items():
             if self.binding_dtype(name) != data.dtype:
                 raise TypeError(
