@@ -115,15 +115,14 @@ def test_latency(
 
     result = []
     for seq_len, gen_len in variants:
-
-        def calc_time():
+        stats = []
+        input_ids = generate_ids_function(seq_len)
+        for _ in range(repeats):
             t_0 = time.perf_counter()
             generate_seq_function(input_ids, gen_len)
             t_1 = time.perf_counter()
+            stats.append(t_1 - t_0)
 
-            return t_1 - t_0
-
-        stats = [calc_time() for _ in range(repeats)]
         mean_ms, std_ms = np.mean(stats) * 1000, np.std(stats) * 1000
         result.append((seq_len, gen_len, mean_ms, std_ms))
 
