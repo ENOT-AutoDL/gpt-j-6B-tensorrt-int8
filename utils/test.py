@@ -38,8 +38,7 @@ def test_acc(predict_next_id_function: Callable[[torch.Tensor], torch.Tensor], v
     dataset.set_format(type='torch', columns=['input_ids'])
 
     total, hit = 0, 0
-    pbar = tqdm(dataset, disable=not verbose)
-    for i, batch in enumerate(pbar):
+    for batch in tqdm(dataset, disable=not verbose):
         input_ids = batch['input_ids'].unsqueeze(0)
 
         gt_id = input_ids[:, -1]
