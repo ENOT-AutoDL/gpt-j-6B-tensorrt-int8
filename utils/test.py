@@ -82,8 +82,6 @@ def test_latency(
         List of variants for test. Each variant is pair of integer values, where
         the first value is start sequence length and second value is number of
         ids to generate.
-    gen_len_variants : List[int]
-        List of variants of number of ids to generate.
     warmup : int
         Number of warmup runs. Every warmup run selects input ids length and
         number of ids to generate from test variants randomly.
