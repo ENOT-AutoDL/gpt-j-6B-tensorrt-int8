@@ -2,7 +2,6 @@ from pathlib import Path
 
 import pynvml
 import tensorrt as trt
-
 from huggingface_hub import hf_hub_download
 from huggingface_hub.utils import EntryNotFoundError
 
